@@ -1,0 +1,43 @@
+
+# XeviousPE-Factions by 64FF00 (xktiverz@gmail.com, @64ff00 for Twitter)
+
+name: XeviousPE-Factions
+main: _64FF00\XeviousPE_Factions\Tribble
+version: "INDEV"
+api: [1.12.0, 2.0.0]
+load: STARTUP
+author: 64FF00
+website: https://github.com/PurePlugins/XeviousPE-Factions
+commands:
+  f:
+    description: "XeviousPE-Factions by 64FF00 / xeviousnetwork.ca"
+permissions:
+  xevpefacs:
+    description: "XeviousPE-Factions by 64FF00! (Twitter: @64FF00) / xeviousnetwork.ca"
+    children:
+      xevpefacs.f:
+        children:
+          xevpefacs.f.admin:
+            description: ""
+          xevpefacs.f.claim:
+            description: ""	
+          xevpefacs.f.create:
+            description: ""
+          xevpefacs.f.home:
+            description: ""
+          xevpefacs.f.invite:
+            description: ""
+          xevpefacs.f.join:
+            description: ""	
+          xevpefacs.f.leave:
+            description: ""
+          xevpefacs.f.motd:
+            description: ""	
+          xevpefacs.f.remove:
+            description: ""
+          xevpefacs.f.sethome:
+            description: ""	
+          xevpefacs.f.setrank:
+            description: ""
+          xevpefacs.f.unclaim:
+            description: ""				
