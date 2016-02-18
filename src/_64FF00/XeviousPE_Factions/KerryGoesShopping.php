@@ -43,12 +43,15 @@ class KerryGoesShopping implements CommandExecutor
     {
         if($sender instanceof ConsoleCommandSender)
         {
-            // TODO
+            $sender->sendMessage(TextFormat::RED . "[ERROR] This command cannot be run on console.");
+
+            return true;
         }
 
         if(!isset($args[0]))
         {
-            // TODO
+            $sender->sendMessage(TextFormat::YELLOW . "--- XeviousPE-Factions by 64FF00 ---");
+            $sender->sendMessage(TextFormat::YELLOW . "Usage: /f <admin / claim / create / home / invite / join / leave / motd / remove / sethome / setrank / unclaim>");
 
             return true;
         }
@@ -87,17 +90,21 @@ class KerryGoesShopping implements CommandExecutor
 
                 return $this->tribbleMaker->motd($sender, $args);
 
+            case "myfac":
+
+                return $this->tribbleMaker->myFac($sender, $args);
+
             case "remove":
 
                 return $this->tribbleMaker->remove($sender, $args);
 
             case "sethome":
 
-                return $this->tribbleMaker->sethome($sender, $args);
+                return $this->tribbleMaker->setHome($sender, $args);
 
             case "setrank":
 
-                return $this->tribbleMaker->setrank($sender, $args);
+                return $this->tribbleMaker->setRank($sender, $args);
 
             case "unclaim":
 

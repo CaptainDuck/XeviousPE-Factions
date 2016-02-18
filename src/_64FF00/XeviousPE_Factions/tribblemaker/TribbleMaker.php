@@ -2,8 +2,8 @@
 
 namespace _64FF00\XeviousPE_Factions\tribblemaker;
 
-use _64FF00\XeviousPE_Factions\KerryGoesShopping;
-use _64FF00\XeviousPE_Factions\Tribble;
+use _64FF00\XeviousPE_Factions\Tribble
+    ;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 
@@ -54,7 +54,7 @@ class TribbleMaker
 
         if(!isset($args[1]))
         {
-            $sender->sendMessage(TextFormat::RED . "Usage: /f create <name>");
+            $sender->sendMessage(TextFormat::YELLOW . "Usage: /f create <name>");
 
             return true;
         }
@@ -65,6 +65,9 @@ class TribbleMaker
 
             return true;
         }
+
+        $this->trib->getProvider()->addMember($args[1], $sender->getName());
+        $this->trib->getProvider()->setPlayerFaction($sender->getName(), $args[1]);
 
         $sender->sendMessage(TextFormat::DARK_GRAY . "You created the faction successfully.");
 
@@ -98,7 +101,52 @@ class TribbleMaker
 
     public function motd(CommandSender $sender, $args)
     {
-        return true;
+        if(!$sender->hasPermission("xevpefacs.f.motd"))
+        {
+            $sender->sendMessage(TextFormat::RED . "You don't have permission to use this command.");
+
+            return true;
+        }
+
+        if(!isset($args[1]))
+        {
+            $sender->sendMessage(TextFormat::YELLOW . "Usage: /f motd <motd>");
+
+            return true;
+        }
+
+        $faction = $this->trib->getProvider()->getPlayerFaction($sender->getName());
+
+        if(empty($faction))
+        {
+            $sender->sendMessage(TextFormat::RED . "[ERROR] You don't belong to any faction.");
+
+            return true;
+        }
+
+        if(!$this->trib->getProvider()->setMotd($faction, $args[1]))
+        {
+            $sender->sendMessage(TextFormat::RED . "[ERROR] Invalid MOTD!");
+
+            return true;
+        }
+
+        $sender->sendMessage(TextFormat::DARK_GRAY . "You set your faction MOTD to '" . $args[1] . "'");
+    }
+
+    public function myFac(CommandSender $sender, $args)
+    {
+        $faction = $this->trib->getProvider()->getPlayerFaction($sender->getName());
+
+        if(empty($faction))
+        {
+            $sender->sendMessage(TextFormat::DARK_GRAY . "You don't belong to any faction.");
+
+            return true;
+        }
+
+        // TODO: ADD MORE INFO
+        $sender->sendMessage(TextFormat::DARK_GRAY . "Your faction: " . $faction);
     }
 
     public function remove(CommandSender $sender, $args)
@@ -124,15 +172,18 @@ class TribbleMaker
             return true;
         }
 
+        $this->trib->getProvider()->removeMember($args[1], $sender->getName());
+        $this->trib->getProvider()->setPlayerFaction($sender->getName(), null);
+
         $sender->sendMessage(TextFormat::DARK_GRAY . "You disbanded your faction.");
     }
 
-    public function sethome(CommandSender $sender, $args)
+    public function setHome(CommandSender $sender, $args)
     {
         return true;
     }
 
-    public function setrank(CommandSender $sender, $args)
+    public function setRank(CommandSender $sender, $args)
     {
         return true;
     }

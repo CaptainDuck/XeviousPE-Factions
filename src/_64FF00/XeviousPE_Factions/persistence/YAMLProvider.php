@@ -20,16 +20,25 @@ class YAMLProvider implements PointlessProvider
           888  888    "Y8888P"        888  888        888        "Y8888P"   "Y8888P"
     */
 
-    private $dataFolder, $trib;
+    private $factionsDataFolder, $playersDataFolder, $trib;
 
+    /**
+     * YAMLProvider constructor.
+     * @param Tribble $tribble
+     * @_64ff00 TEST PROVIDER
+     */
     public function __construct(Tribble $tribble)
     {
         $this->trib = $tribble;
 
-        $this->dataFolder = $this->trib->getDataFolder() . "factions/";
+        $this->factionsDataFolder = $this->trib->getDataFolder() . "factions/";
+        $this->playersDataFolder = $this->trib->getDataFolder() . "players/";
 
-        if(!file_exists($this->dataFolder))
-            \mkdir($this->dataFolder, 0777, true);
+        if(!file_exists($this->factionsDataFolder))
+            \mkdir($this->factionsDataFolder, 0777, true);
+
+        if(!file_exists($this->playersDataFolder))
+            \mkdir($this->playersDataFolder, 0777, true);
     }
 
     /**
@@ -50,12 +59,34 @@ class YAMLProvider implements PointlessProvider
     }
 
     /**
+     * @param $facName
+     * @param $userName
+     * @return bool
+     */
+    public function addMember($facName, $userName)
+    {
+        if($facName === null || $userName === null)
+            return false;
+
+        $members = $this->getFactionConfig($facName)->get("members");
+
+        if(!is_array($members))
+            throw new \RuntimeException("Corrupted faction data found in: " . $facName);
+
+        $members[] = $userName;
+
+        $this->getFactionConfig($facName)->set("members", $members);
+
+        return true;
+    }
+
+    /**
      * @param $name
      * @return bool
      */
     public function factionExists($name)
     {
-        return file_exists($this->dataFolder . strtolower($name) . ".yml");
+        return file_exists($this->factionsDataFolder . strtolower($name) . ".yml");
     }
 
     /**
@@ -64,11 +95,38 @@ class YAMLProvider implements PointlessProvider
      */
     public function getFactionConfig($name)
     {
-        return new Config($this->dataFolder . strtolower($name) . ".yml", Config::YAML, [
+        return new Config($this->factionsDataFolder . strtolower($name) . ".yml", Config::YAML, [
             "name" => $name,
+            "motd" => "Hello, World!",
             "members" => [
             ]
         ]);
+    }
+
+    /**
+     * @param $userName
+     * @return Config
+     */
+    public function getPlayerConfig($userName)
+    {
+        return new Config($this->playersDataFolder . strtolower($userName) . ".yml", Config::YAML, [
+            "name" => $userName,
+            "faction" => null
+        ]);
+    }
+
+    /**
+     * @param $userName
+     * @return string
+     */
+    public function getPlayerFaction($userName)
+    {
+        $result = $this->getPlayerConfig($userName)->get("faction");
+
+        if($result === null)
+            return null;
+
+        return $result;
     }
 
     /**
@@ -77,10 +135,57 @@ class YAMLProvider implements PointlessProvider
      */
     public function removeFaction($name)
     {
-        $result = @unlink($this->dataFolder . strtolower($name) . ".yml");
+        $result = @unlink($this->factionsDataFolder . strtolower($name) . ".yml");
 
         if($result !== true)
             return false;
+
+        return true;
+    }
+
+    /**
+     * @param $facName
+     * @param $userName
+     * @return bool
+     */
+    public function removeMember($facName, $userName)
+    {
+        if($facName === null || $userName === null)
+            return false;
+
+        $members = $this->getFactionConfig($facName)->get("members");
+
+        if(!is_array($members))
+            throw new \RuntimeException("Corrupted faction data found in: " . $facName);
+
+        $members = array_diff($members, $userName);
+
+        $this->getFactionConfig($facName)->set("members", $members);
+
+        return true;
+    }
+
+    /**
+     * @param $name
+     * @param $motd
+     * @return bool
+     */
+    public function setMotd($name, $motd)
+    {
+        if(empty($motd))
+            return false;
+
+        $this->getFactionConfig($name)->set("motd", $motd);
+
+        return true;
+    }
+
+    public function setPlayerFaction($userName, $facName)
+    {
+        if($userName === null)
+            return false;
+
+        $this->getPlayerConfig($facName)->set("faction", $facName);
 
         return true;
     }

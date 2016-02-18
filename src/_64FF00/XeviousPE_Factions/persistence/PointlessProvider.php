@@ -19,9 +19,19 @@ interface PointlessProvider
 
     public function addFaction($name);
 
+    public function addMember($facName, $userName);
+
     public function factionExists($name);
 
+    public function getPlayerFaction($userName);
+
     public function removeFaction($name);
+
+    public function removeMember($facName, $userName);
+
+    public function setMotd($name, $motd);
+
+    public function setPlayerFaction($userName, $facName);
 
     public function close();
 }

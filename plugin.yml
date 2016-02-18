@@ -20,24 +20,35 @@ permissions:
           xevpefacs.f.admin:
             description: ""
           xevpefacs.f.claim:
+            default: true
             description: ""	
           xevpefacs.f.create:
+            default: true
             description: ""
           xevpefacs.f.home:
+            default: true
             description: ""
           xevpefacs.f.invite:
+            default: true
             description: ""
           xevpefacs.f.join:
-            description: ""	
+            default: true
+            description: ""
           xevpefacs.f.leave:
+            default: true
             description: ""
           xevpefacs.f.motd:
-            description: ""	
+            default: true
+            description: ""
           xevpefacs.f.remove:
+            default: true
             description: ""
           xevpefacs.f.sethome:
-            description: ""	
+            default: true
+            description: ""
           xevpefacs.f.setrank:
+            default: true
             description: ""
           xevpefacs.f.unclaim:
+            default: true
             description: ""				
